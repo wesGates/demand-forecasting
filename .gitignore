@@ -3,3 +3,6 @@ data/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+HANDOFF.md
+retail-forecasting-study-plan.md
+TECH_SPEC.md
