@@ -1,4 +1,11 @@
-from src.data import load_m5, trim_leading_zeros
+"""Smoke check: build the study panel and print what came back."""
 
-df = load_m5("data", store_id="CA_1", cat_id="FOODS")
-df = trim_leading_zeros(df)
+from src.step1_problem import Config
+from src.step2_data import load_panel
+
+STUDY_ITEMS = ("FOODS_3_120", "FOODS_3_681", "FOODS_3_282")
+
+if __name__ == "__main__":
+    cfg = Config(item_ids=STUDY_ITEMS)
+    print(cfg.describe(), "\n")
+    load_panel(cfg)

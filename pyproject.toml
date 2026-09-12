@@ -1,0 +1,27 @@
+[tool.ruff]
+line-length = 90
+target-version = "py314"
+
+[tool.ruff.format]
+# Keep short grouped lists (column names, lag offsets) on one line instead of
+# exploding them to one element per line - they read better grouped.
+skip-magic-trailing-comma = true
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
+
+[tool.ruff.lint]
+# E/F: pycodestyle + pyflakes. I: import order. UP: modern syntax.
+# B: likely bugs. NPY/PD: numpy and pandas gotchas.
+select = ["E", "F", "I", "UP", "B", "NPY", "PD"]
+ignore = [
+    "E501",   # line length is the formatter's job
+    "PD010",  # .unstack() is clearer than .pivot_table() for a size() Series
+]
+
+[tool.ruff.lint.per-file-ignores]
+# A bare trailing expression is how a notebook cell displays its result.
+"notebooks/*" = ["B018"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

@@ -1,0 +1,12 @@
+# Pinned to the versions this analysis was developed and verified against.
+# Python 3.14.3 on Windows.
+pandas==3.0.5
+numpy==2.5.3
+scipy==1.18.1
+scikit-learn==1.9.0
+matplotlib==3.11.1
+xgboost==3.4.1
+statsmodels==0.15.0
+pyarrow==25.0.1
+tqdm==4.70.0
+ipykernel==7.3.0

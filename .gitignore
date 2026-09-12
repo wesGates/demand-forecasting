@@ -1,8 +1,17 @@
+# --- data (large, licensed, must never be committed) ---
 data/
+cache/
+
+# --- environment ---
 .venv/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
+.ruff_cache/
+.pytest_cache/
+
+# --- private working notes, not part of the public deliverable ---
 HANDOFF.md
 retail-forecasting-study-plan.md
+wcs-ml-study-plan.md
 TECH_SPEC.md
