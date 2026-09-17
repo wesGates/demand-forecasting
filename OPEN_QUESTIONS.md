@@ -81,13 +81,6 @@ so they land on every weekday.
 **Decides it:** whether the horizon plot is going to carry weight in the
 write-up. If it is, fix it; if RMSSE-by-store is the headline, note it.
 
-### 4. A private filename is in pushed git history
-
-Commit `34eddc0`'s `.gitignore` names a private working document. Replaced
-with a wildcard pattern from `18a185e` onward, so it will not recur — but
-the earlier commit is on GitHub. Removing it means rewriting history and
-force-pushing. Owner's decision; not done.
-
 ---
 
 ## Next steps, not yet started
@@ -113,6 +106,9 @@ force-pushing. Owner's decision; not done.
 
 *(decisions recorded here as they are made)*
 
+- **Private filename in `34eddc0`'s `.gitignore`** — left as is. It is a
+  filename, not content; the pattern was replaced with a wildcard from the
+  next commit onward so it does not recur. Decided 2026-09-17.
 - **RMSSE scaling** — lag 7 (seasonal naive, FPP §5.8's rule for seasonal
   data), denominator computed once per series over all pre-holdout training
   data. Alternatives (lag 1 for M5 comparability; per-fold denominator) are
