@@ -828,6 +828,14 @@ def plot_rmsse_by_horizon(
     read: a flat line means the method is not using the recent past at all
     (a mean does this), a steep one means its advantage is mostly at short
     horizons.
+
+    **Caveat - horizon is confounded with weekday.** When fold origins step
+    by exactly the season length (7 days), every origin lands on the same
+    weekday, so h=1 is always the same day of the week and h=7 always
+    another. This plot then mixes "how far ahead" with "which weekday", and
+    the high-volume weekend day inflates h=7 for every method. Read it with
+    that in mind, or step origins by a number coprime to 7. See
+    OPEN_QUESTIONS.md.
     """
     ax = ax or plt.gca()
     methods = _present(predictions, methods)

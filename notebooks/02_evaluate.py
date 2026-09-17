@@ -188,6 +188,12 @@ fig
 # way. A steep line means the method's edge is concentrated at short horizons.
 # Where the model lines cross the benchmark lines, if they do, is the horizon
 # beyond which the model stops earning its complexity.
+#
+# **Caveat.** Our fold origins step by exactly 7 days, so every origin is the
+# same weekday — h = 1 is always Monday, h = 7 always Sunday. This plot
+# therefore mixes "how far ahead" with "which weekday", and Sunday is the
+# busiest, noisiest day. If the curves are not a clean monotone rise, that is
+# why. `OPEN_QUESTIONS.md` has the options for separating the two.
 
 # %%
 fig, ax = plt.subplots(figsize=(7, 3.4))
