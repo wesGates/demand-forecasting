@@ -12,6 +12,14 @@ __pycache__/
 
 # --- private working notes, not part of the public deliverable ---
 HANDOFF.md
-retail-forecasting-study-plan.md
-wcs-ml-study-plan.md
+*-study-plan.md
 TECH_SPEC.md
+
+# --- product-specific findings, kept for reference, never committed ---
+findings/
+
+# --- rendered review figures, for looking at, never committed ---
+figures/
+
+# --- working notes and reference material, never committed ---
+information/

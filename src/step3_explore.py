@@ -47,6 +47,8 @@ everything at or after it is excluded.
 
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 import pandas as pd
 
@@ -56,18 +58,25 @@ from src.step1_problem import Config
 ADI_CUT = 1.32
 CV2_CUT = 0.49
 
-DEMAND_CLASSES = ("smooth", "erratic", "intermittent", "lumpy")
+# Availability screen: a zero run longer than this triggers a warning. Chosen
+# from the screen in step 3 - a genuinely fast-moving item never posts a month
+# of zeros, while the median FOODS_3 series has an 83-day run. Anything past 30
+# is far more likely to be "not on the shelf" than "nobody wanted it".
+MAX_ZERO_RUN_WARN = 30
+
+# Every label `demand_class` can return, including the refusal case.
+DEMAND_CLASSES = ("smooth", "erratic", "intermittent", "lumpy", "unclassifiable")
 
 
 def classification_cutoff(df: pd.DataFrame, cfg: Config) -> pd.Timestamp:
     """
     First date that will ever be scored, across every walk-forward fold.
 
-    Folds walk backwards from the end of the data in `test_window` steps, so the
-    earliest scored day sits `n_folds * test_window` days from the end. Anything
-    on or after this date is off-limits for computing a class label.
+    Delegates to `Config.holdout_start` so step 3 and step 5 can never disagree
+    about where the held-out window begins. Anything on or after this date is
+    off-limits for computing a class label.
     """
-    return df["date"].max() - pd.Timedelta(days=cfg.test_days_total - 1)
+    return cfg.holdout_start(df["date"].max())
 
 
 def demand_class(adi: float, cv2: float) -> str:
@@ -144,6 +153,24 @@ def series_stats(df: pd.DataFrame, cfg: Config) -> pd.DataFrame:
     out["demand_class"] = [
         demand_class(a, c) for a, c in zip(out["adi"], out["cv2"], strict=True)
     ]
+
+    # The screen is only useful if it speaks up. A long dead block inflates ADI
+    # exactly like real intermittency, so a class label built on one is
+    # measuring shelf availability, not demand - say so before it gets modelled.
+    flagged = out[out["max_zero_run"] > MAX_ZERO_RUN_WARN]
+    if not flagged.empty:
+        worst = flagged.sort_values("max_zero_run", ascending=False).head(5)
+        detail = ", ".join(
+            f"{r.item_id}@{r.store_id} ({int(r.max_zero_run)}d)"
+            for r in worst.itertuples()
+        )
+        warnings.warn(
+            f"{len(flagged)} of {len(out)} series have a zero-sales run longer than "
+            f"{MAX_ZERO_RUN_WARN} days - their demand class likely reflects stocking "
+            f"gaps, not customer behaviour. Worst: {detail}",
+            stacklevel=2,
+        )
+
     return out.sort_values(["item_id", "mean_sales"], ascending=[True, False])
 
 

@@ -10,3 +10,7 @@ statsmodels==0.15.0
 pyarrow==25.0.1
 tqdm==4.70.0
 ipykernel==7.3.0
+mplcursors==0.7.1     # hover tooltips in pop-out figure windows; optional
+
+# development only - formatting and linting
+ruff==0.16.7

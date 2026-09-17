@@ -23,5 +23,3 @@ ignore = [
 # A bare trailing expression is how a notebook cell displays its result.
 "notebooks/*" = ["B018"]
 
-[tool.pytest.ini_options]
-testpaths = ["tests"]
