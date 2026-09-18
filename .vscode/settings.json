@@ -1,0 +1,31 @@
+{
+  // Use the project's own venv, so the Interactive Window kernel, the
+  // integrated terminal and the linter all agree on one interpreter.
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+
+  // Let Pylance resolve `from src import ...` the same way the notebooks do
+  // at runtime, so the editor stops underlining those imports in red.
+  "python.analysis.extraPaths": ["${workspaceFolder}"],
+
+  // Start cells at the repo root rather than the file's own folder, so an
+  // ad-hoc relative path typed in a cell means the same thing it would in a
+  // plain script run. (The notebooks no longer depend on this - the sys.path
+  // bootstrap works either way - but it removes a surprise.)
+  "jupyter.notebookFileRoot": "${workspaceFolder}",
+
+  // MATLAB-style execution: Shift+Enter sends the current `# %%` cell, or the
+  // current selection, to the Interactive Window; variables persist between
+  // runs in the same kernel.
+  "jupyter.interactiveWindow.textEditor.executeSelection": true,
+
+  // One Interactive Window per notebook file, so 01_explore and 02_evaluate
+  // keep separate kernels and separate variable state.
+  "jupyter.interactiveWindow.creationMode": "perFile",
+
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff",
+    "editor.codeActionsOnSave": {
+      "source.organizeImports.ruff": "explicit"
+    }
+  }
+}
