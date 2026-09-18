@@ -21,8 +21,30 @@
 
 # %%
 import sys
+from pathlib import Path
 
-sys.path.append("..")  # so `src` imports work from inside notebooks/
+# Put the repo root on sys.path so `from src import ...` resolves however this
+# file is run: cell-by-cell in the Interactive Window, which starts in
+# notebooks/, or as a plain script from any directory at all. This was
+# `sys.path.append("..")`, which assumed the working directory was always
+# notebooks/ - true for the Interactive Window, but not for
+# `python notebooks/01_explore.py`, which raised ModuleNotFoundError instead.
+# Searching upward for the directory that actually holds src/ works from either.
+if not any((Path(p) / "src").is_dir() for p in sys.path):
+    sys.path.insert(
+        0,
+        str(
+            next(
+                d
+                for start in [
+                    Path(globals().get("__file__", ".")).resolve().parent,
+                    Path.cwd(),
+                ]
+                for d in (start, *start.parents)
+                if (d / "src").is_dir()
+            )
+        ),
+    )
 
 # Pick up edits to anything under src/ without restarting the kernel.
 # Python caches imported modules, so without this an edited src/plots.py
