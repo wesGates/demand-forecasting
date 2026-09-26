@@ -40,6 +40,11 @@ h1 = pstyle("H1", size="16pt", bold=True, align="start", after="0.1cm"); h2 = ps
 cellp = pstyle("Cell", size="9pt", align="start", after="0cm"); cellc = pstyle("CellC", size="9pt", align="center", after="0cm")
 cellh = pstyle("CellH", size="9pt", bold=True, align="center", after="0cm"); cellh0 = pstyle("CellH0", size="9pt", bold=True, align="start", after="0cm")
 figp = pstyle("Figure", align="center", after="0.1cm")  # figures sit centred in their own paragraph
+h2_break = pstyle("H2Break", size="12pt", bold=True, align="start", before="0cm", after="0.1cm")  # a heading that starts a new page
+h2_break.addElement(ParagraphProperties(breakbefore="page"))
+cap_break = pstyle("CaptionBreak", size="9.5pt", italic=True, color="#333333", align="start", after="0.25cm")
+cap_break.addElement(ParagraphProperties(breakbefore="page"))
+body_break = pstyle("BodyBreak"); body_break.addElement(ParagraphProperties(breakbefore="page"))
 bold = Style(name="B", family="text"); bold.addElement(TextProperties(fontweight="bold")); doc.styles.addElement(bold)
 ital = Style(name="I", family="text"); ital.addElement(TextProperties(fontstyle="italic")); doc.styles.addElement(ital)
 mono = Style(name="M", family="text"); mono.addElement(TextProperties(fontname="Liberation Mono", fontsize="9pt")); doc.styles.addElement(mono)
@@ -122,15 +127,16 @@ def add_image(path):
 
 tcount = [0]
 para, bullets, numbered, table_rows = [], [], False, []
+page_break_pending = False
 def flush_para():
-    global para
+    global para, page_break_pending
     if para:
         text = " ".join(para).strip()
         if text.startswith("*") and text.endswith("*") and text.count("*") == 2:
-            doc.text.addElement(inline(text[1:-1], P(stylename=cap)))
+            doc.text.addElement(inline(text[1:-1], P(stylename=cap_break if page_break_pending else cap)))
         else:
-            doc.text.addElement(inline(text, P(stylename=body)))
-        para = []
+            doc.text.addElement(inline(text, P(stylename=body_break if page_break_pending else body)))
+        para = []; page_break_pending = False
 def flush_bullets():
     global bullets, numbered
     if bullets:
@@ -144,10 +150,13 @@ def flush_table():
 def flush_all(): flush_table(); flush_para(); flush_bullets()
 
 for line in SRC.read_text().splitlines():
+    if line.strip() == "<!-- pagebreak -->":
+        flush_all(); page_break_pending = True; continue
     if line.startswith("# "):
         flush_all(); doc.text.addElement(H(outlinelevel=1, stylename=h1, text=line[2:]))
     elif line.startswith("## "):
-        flush_all(); doc.text.addElement(H(outlinelevel=2, stylename=h2, text=line[3:]))
+        flush_all()
+        doc.text.addElement(H(outlinelevel=2, stylename=h2_break if page_break_pending else h2, text=line[3:])); page_break_pending = False
     elif line.startswith("!["):
         flush_all(); add_image(SRC.parent / re.search(r"\((.+?)\)", line).group(1))
     elif line.startswith("|"):

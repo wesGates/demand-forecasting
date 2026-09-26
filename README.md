@@ -1,8 +1,8 @@
 # Demand forecasting on M5
 
 A daily, store-level demand forecast, tested on a full year at ten stores
-against the forecasts a planner would use without it. Public data: the M5
-dataset of Walmart daily sales, with a calendar of holidays and SNAP
+against the forecasts an orderer might use without it. Public data: the
+M5 dataset of Walmart daily sales, with a calendar of holidays and SNAP
 benefit days.
 
 **84% of store-weeks** better than ordering from last week's number, by a
@@ -16,8 +16,8 @@ per store down to 27.6.
 
 Five years of daily history, ten stores, 358 forecast origins per store,
 3,580 scored store-weeks per method, ten methods (two benchmarks, four
-statistical models and four machine learning variants), every model refit
-at every origin.
+statistical models and four machine learning variants), and every model
+was refit at each origin.
 
 Each rung below is one modelling step up from the one before. The final
 model is gradient-boosted trees (XGBoost) trained across all ten stores on
@@ -56,11 +56,12 @@ built from markdown with [`tools/report/`](tools/report/).
 - Bias reported beside error throughout. A forecast that runs
   systematically high is shrink every week and one that runs low is a
   stockout.
-- Every number reproducible to the byte. Each change to a model is scored
-  against the previous version on the same 3,580 store-weeks, so noise
-  shows up as a coin-flip win rate. The run records live in SQLite and
-  load into SQL Server with one script ([`tools/sqlserver/`](tools/sqlserver/)),
-  where the report's numbers come back by query.
+- All resulting numbers are byte-identical on subsequent runs. Each change
+  to a model is scored against the previous version on the same 3,580
+  store-weeks, so noise shows up as a win rate close to 50%. The run
+  records live in SQLite and load into SQL Server with one script
+  ([`tools/sqlserver/`](tools/sqlserver/)), where the report's numbers
+  come back by query.
 - A full-year evaluation of all methods on one item in about fifteen
   minutes, and a validator that has to pass before any number is quoted.
 

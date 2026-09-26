@@ -8,7 +8,7 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
 from reportlab.lib.enums import TA_LEFT, TA_JUSTIFY
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, ListFlowable, ListItem, KeepTogether, Table, TableStyle, CondPageBreak
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image, ListFlowable, ListItem, KeepTogether, Table, TableStyle, CondPageBreak, PageBreak
 from reportlab.lib import colors
 from PIL import Image as PILImage
 
@@ -119,7 +119,9 @@ def flush_bullets():
 first_para = True
 para_style_override = []  # positions of reference paragraphs, set smaller in compact mode
 for line in SRC.read_text().splitlines():
-    if line.startswith("# "):
+    if line.strip() == "<!-- pagebreak -->":
+        flush_table(); flush_para(); flush_bullets(); flow.append(PageBreak())
+    elif line.startswith("# "):
         flush_table(); flush_para(); flush_bullets(); flow.append(Paragraph(inline(line[2:]), h1))
     elif line.startswith("## "):
         flush_table(); flush_para(); flush_bullets()
