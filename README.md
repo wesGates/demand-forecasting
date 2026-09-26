@@ -37,9 +37,10 @@ miss on a week's total order, in units, about 9% of a typical week's sales
 for the final model and 11% for last week's number.
 
 On a slow mover in decline (0.6 to 7 units a day) a 28-day moving average
-is the best forecast and the final model ties it (0.50 each), so items are
-routed by demand class before anything is fitted, the machine learning
-model for steady daily movers and the simple average for the rest.
+is the best forecast and the final model ties it (0.50 each). Every series
+is classified by demand class before anything is fitted, and the rule for
+a wider catalogue is to give steady daily movers the machine learning
+model and items that do not sell every day the simple average.
 
 The full story, with the figures, the tables for both items and every
 method against every baseline, is [`report/report.pdf`](report/report.pdf).
