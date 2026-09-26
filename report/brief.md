@@ -75,7 +75,9 @@ number. The full ladder is in the main report.*
   stockout.
 - Every number reproducible to the byte. Each change to a model is scored
   against the previous version on the same 3,580 store-weeks, so noise
-  shows up as a coin-flip win rate.
+  shows up as a coin-flip win rate. The run records live in SQLite and
+  load into SQL Server with one script, where the report's numbers come
+  back by query.
 - A full-year evaluation of all methods on one item in about fifteen
   minutes, and a validator that has to pass before any number is quoted.
 
@@ -103,7 +105,7 @@ the tenth. The busiest store benefits the most, 17 fewer units a week.*
   approach recommended for daily data with a yearly cycle (Hyndman et
   al., 2026, §13.1).
 - Scale from two items and ten stores to a department of 800 items, with
-  the run records in a shared SQL database.
+  the SQL Server store shared.
 
 Full report and code: github.com/wesGates/demand-forecasting (the first
 study as reported is tag first-study there).

@@ -61,7 +61,9 @@ summary is [`report/brief.md`](report/brief.md). Both build to PDF and
   stockout.
 - Every number reproducible to the byte. Each change to a model is scored
   against the previous version on the same 3,580 store-weeks, so noise
-  shows up as a coin-flip win rate.
+  shows up as a coin-flip win rate. The run records live in SQLite and
+  load into SQL Server with one script ([`tools/sqlserver/`](tools/sqlserver/)),
+  where the report's numbers come back by query.
 - A full-year evaluation of all methods on one item in about fifteen
   minutes, and a validator that has to pass before any number is quoted.
 
@@ -90,6 +92,7 @@ time, each on its own branch with a dated findings file in
 | 7 | A parallel harness | Every-day runs in 15 min per item, down from about 2 h. Forecasts identical. |
 | 8 | A code review | One leak fixed (the closure imputation looked forward), fallbacks and unscored folds counted, the cache checked against the data. |
 | 9 | Both items in one pool? | Ties on the fast mover, loses on the slow one in holiday weeks. A shared pool needs the target on a common scale. |
+| 10 | The registry in SQL Server | Both tables loaded into SQL Server 2022 in under three minutes. The report's numbers come back by query. |
 
 [`PLAN.md`](PLAN.md) has the status, what comes next and the rules.
 [`GLOSSARY.md`](GLOSSARY.md) defines the terms.

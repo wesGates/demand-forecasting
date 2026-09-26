@@ -9,7 +9,7 @@ has the numbers.
 The parent repository established that XGBoost, ETS and seasonal ARIMA
 beat six benchmarks on one fast-moving item at ten stores (52 weekly
 folds), and that a point forecast is not an order. This repository took
-that pipeline through nine items:
+that pipeline through ten items:
 
 | item | branch | outcome |
 |---|---|---|
@@ -22,6 +22,7 @@ that pipeline through nine items:
 | 7. parallel harness | `item7-parallel-harness` | one thread per fit, tasks in worker processes; forecasts identical; every-day runs 15 min per item |
 | 8. review fixes | `item8-review-fixes` | closure imputation backward-only; events chosen before the cutoff; fallbacks and unscored folds counted; cache checked against the data; `step1` in the key; atomic writes; registry guards |
 | 9. both items in one pool | `exp-xgb-quick-wins` | ties on the fast mover, loses on the slow one in holiday weeks; the additive target carries holiday lifts across items, so a shared pool needs a proportional target |
+| 10. the registry in SQL Server | on main | the two registry tables loaded into SQL Server 2022 (Docker) in under three minutes and queried there; `tools/sqlserver/` |
 
 The same branch added two weaker relatives of ARIMA as baselines
 (`arima_plain`, no regressors; `arma`, no seasonality, no regressors) and

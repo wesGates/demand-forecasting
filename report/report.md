@@ -164,8 +164,9 @@ In short, this is a first version of a store forecasting system.
 - Bias reported beside error, because a forecast that runs systematically
   high is shrink every week and one that runs low is a stockout.
 - A pipeline where every number is reproducible, every change is measured
-  against the last one, and a full evaluation takes fifteen minutes, so a
-  change can be tested for quick iteration.
+  against the last one in a run registry (SQLite, also loaded into SQL
+  Server), and a full evaluation takes fifteen minutes, so a change can be
+  tested for quick iteration.
 
 The rest of the report is how those results were reached.
 
@@ -405,6 +406,16 @@ holiday lift learned on an item selling 60 a day carries across as tens
 of units. Sharing a model across items needs the target on a common
 scale, which is left for future work.
 
+**The registry in SQL Server.** The run registry is two tables in a
+SQLite file beside the forecast cache, one row per run and one row per
+scored store-week. A small loader created the same two tables, with their
+keys, in SQL Server 2022 running in a Docker container, and filled them
+with 381 runs and 722,088 scored store-weeks in under three minutes. The
+best-method, per-store and holiday-week queries run there return the
+numbers in this report's tables. It is the first version of a shared
+results store, where any run's settings, code version and scores can be
+read with a query.
+
 ![Figure 4](figures/4_progression.png)
 
 *Figure 4. The machine learning model at each stage on both items. Left,
@@ -459,8 +470,10 @@ across operating systems is not claimed.
   drift in level suggests, and a proportional target (sales divided by the
   recent level) so one model can serve items of different volume.
 - Scale from two items and ten stores to a department, which needs the
-  pooled model's target on a common scale across items, and move the run
-  records to a shared SQL database.
+  pooled model's target on a common scale across items.
+- Grow the SQL Server store past the first version, with a query-only
+  login, runs written to it directly, and the forecast rows beside the
+  scores.
 - Read deliveries and on-hand counts where they exist, to tell a zero on
   the shelf from a zero in demand.
 
