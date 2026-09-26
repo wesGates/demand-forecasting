@@ -24,3 +24,7 @@ information/
 
 # --- LibreOffice lock files ---
 .~lock*
+
+# --- report: only the PDFs are tracked; the markdown sources and figures stay local ---
+report/*
+!report/*.pdf

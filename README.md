@@ -19,12 +19,9 @@ Five years of daily history, ten stores, 358 forecast origins per store,
 statistical models and four machine learning variants), every model refit
 at every origin.
 
-![What each modelling step gained](report/figures/1_ladder.png)
-
-Each rung is one modelling step up from the one before, and the label on
-each bar is the median gain over the previous step. The final model is
-gradient-boosted trees (XGBoost) trained across all ten stores on a
-level-relative target, and its gain is over a strong statistical model.
+Each rung below is one modelling step up from the one before. The final
+model is gradient-boosted trees (XGBoost) trained across all ten stores on
+a level-relative target, and its gain is over a strong statistical model.
 
 | rung | RMSSE | weekly error, units | vs previous rung, weeks won | vs previous rung, median gain | vs seasonal naive, weeks won | vs seasonal naive, median gain |
 |---|---|---|---|---|---|---|
@@ -44,10 +41,10 @@ is the best forecast and the final model ties it (0.50 each), so items are
 routed by demand class before anything is fitted, the machine learning
 model for steady daily movers and the simple average for the rest.
 
-The full story, with the tables for both items and every method against
-every baseline, is [`report/report.md`](report/report.md). The two-page
-summary is [`report/brief.md`](report/brief.md). Both build to PDF and
-.odt with [`tools/report/`](tools/report/).
+The full story, with the figures, the tables for both items and every
+method against every baseline, is [`report/report.pdf`](report/report.pdf).
+The two-page summary is [`report/brief.pdf`](report/brief.pdf). Both are
+built from markdown with [`tools/report/`](tools/report/).
 
 ## What the system does
 
@@ -170,7 +167,7 @@ tools/                refit, gate, comparison, figure and report scripts
 tests/                pytest suite
 notebooks/            01_explore, 02_evaluate, 03_order (percent-format scripts)
 findings/             one dated file per item, with provenance
-report/               the report, the brief and their figures
+report/               the report and the brief (PDF); sources and figures are local
 ```
 
 ## Limits
