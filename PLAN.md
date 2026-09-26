@@ -27,8 +27,9 @@ that pipeline through ten items:
 The same branch added two weaker relatives of ARIMA as baselines
 (`arima_plain`, no regressors; `arma`, no seasonality, no regressors) and
 two dev-suite experiments (`xgboost_poisson`, `xgboost_rel_recent`) that
-went no further. The report (`report/report.md`) and the two-page brief
-(`report/brief.md`) are built from `tools/report/`.
+went no further. The report and the two-page brief (`report/report.pdf`,
+`report/brief.pdf`) are built from markdown with `tools/report/`; only the
+PDFs are tracked, the sources and figures stay local.
 
 The numbers to quote are in `findings/2026-09-23-item8-review-fixes.md`.
 The ordering prototype (`src/order.py`, notebook 03) is from before item 1
