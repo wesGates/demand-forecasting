@@ -5,19 +5,19 @@ against the forecasts an orderer might use without it. Public data: the
 M5 dataset of Walmart daily sales, with a calendar of holidays and SNAP
 benefit days.
 
-**84% of store-weeks** better than ordering from last week's number, by a
-median of 28%, on a fast, regular mover.
+**84% of seven-day forecasts** better than ordering from last week's
+number, by a median of 28%, on a fast, regular mover.
 
 **10 of 10 stores** better than ARIMA, the strongest statistical model,
-over the full year.
+over the full year on that item.
 
-**23% less weekly order error** than last week's number, 36 units a week
-per store down to 27.6.
+**23% less weekly order error** than last week's number on that item, 36
+units a week per store down to 27.6.
 
 Five years of daily history, ten stores, 358 forecast origins per store,
-3,580 scored store-weeks per method, ten methods (two benchmarks, four
-statistical models and four machine learning variants), and every model
-was refit at each origin.
+3,580 seven-day forecasts per method (358 origins × 10 stores), ten
+methods (two benchmarks, four statistical models and four machine
+learning variants), and every model was refit at each origin.
 
 Each rung below is one modelling step up from the one before. The final
 model is gradient-boosted trees (XGBoost) trained across all ten stores on
