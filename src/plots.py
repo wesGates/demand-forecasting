@@ -559,6 +559,47 @@ def plot_demand_class_map(
     return ax
 
 
+def plot_demand_class_cloud(
+    stats: pd.DataFrame, keep: pd.Series | None = None, ax: plt.Axes | None = None
+) -> plt.Axes:
+    """
+    The class map for a whole department: thousands of series as small dots
+    on log axes, no store labels. `plot_demand_class_map` is for one item.
+
+    Log axes because ADI runs from 1 to a few hundred and the cut at 1.32
+    would otherwise sit against the left edge. `keep` marks the series that
+    pass the availability screen in ink; the rest stay grey, so the eye sees
+    what the screen removed.
+    """
+    ax = ax or plt.gca()
+    finite = stats[np.isfinite(stats["adi"]) & np.isfinite(stats["cv2"])]
+    if keep is None:
+        keep = pd.Series(True, index=finite.index)
+    keep = keep.reindex(finite.index, fill_value=False)
+    for sel, colour, alpha, z in ((~keep, INK_MUTED, 0.3, 2), (keep, INK, 0.5, 3)):
+        g = finite[sel]
+        ax.scatter(
+            g["adi"], g["cv2"], s=7, color=colour, alpha=alpha, linewidths=0, zorder=z
+        )
+    ax.axvline(ADI_CUT, color=AXIS, lw=1.0, zorder=1)
+    ax.axhline(CV2_CUT, color=AXIS, lw=1.0, zorder=1)
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    x0, x1 = ax.get_xlim()
+    y0, y1 = ax.get_ylim()
+    for name, (x, y, ha, va) in {
+        "smooth": (x0 * 1.05, y0 * 1.2, "left", "bottom"),
+        "erratic": (x0 * 1.05, y1 / 1.2, "left", "top"),
+        "intermittent": (x1 / 1.05, y0 * 1.2, "right", "bottom"),
+        "lumpy": (x1 / 1.05, y1 / 1.2, "right", "top"),
+    }.items():
+        ax.text(x, y, name, ha=ha, va=va, fontsize=8, color=INK_MUTED, style="italic")
+    ax.set_xlabel(f"ADI  —  days per sale  (cut {ADI_CUT}), log scale")
+    ax.set_ylabel(f"CV²  —  variability of sale size  (cut {CV2_CUT}), log scale")
+    ax.set_title(f"Demand classification, {len(finite):,} series")
+    return ax
+
+
 # --------------------------------------------------------------------------- #
 # FPP §1.6 step 3: how strong are the relationships between variables?
 # --------------------------------------------------------------------------- #
@@ -901,8 +942,14 @@ def plot_zero_rate(
 # pooled run.
 NAVY = "#1F3864"
 MODEL_COLOURS = {
-    "arima": NAVY, "ets": SERIES_3, "arma": "#7B52AB", "arima_plain": "#56B4E9",
-    "xgboost_rel@pooled": SERIES_5, "xgboost": SERIES_2, "xgboost@pooled": "#8C2D04", "xgboost_rel": "#E8836B",
+    "arima": NAVY,
+    "ets": SERIES_3,
+    "arma": "#7B52AB",
+    "arima_plain": "#56B4E9",
+    "xgboost_rel@pooled": SERIES_5,
+    "xgboost": SERIES_2,
+    "xgboost@pooled": "#8C2D04",
+    "xgboost_rel": "#E8836B",
 }
 BENCH_LINES = {
     "seasonal_naive": "--",
