@@ -131,7 +131,7 @@ for line in SRC.read_text().splitlines():
         flush_para(); flush_bullets()
         path = SRC.parent / re.search(r"\((.+?)\)", line).group(1)
         # The final-results figure has the smallest text so it stays full width; the others read fine narrower.
-        width = FRAME * (1.0 if "final_results" in path.name else 0.91 if "progression" in path.name else 0.85 if "weekly_error" in path.name else 0.94)
+        width = FRAME * (1.0 if "final_results" in path.name else 0.91 if "progression" in path.name else 0.85 if "weekly_error" in path.name else 0.6 if "classification" in path.name else 0.94)
         flow.append(Spacer(1, 4)); flow.append(image(path, width=width * (0.75 if COMPACT else 1)))
     elif line.startswith("|"):
         flush_para(); flush_bullets()

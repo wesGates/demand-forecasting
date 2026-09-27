@@ -1,6 +1,6 @@
 """Report figures 2 and 3 with plain labels for a non-technical reader.
 Run from the fork root with PYTHONPATH=. ; writes report/figures/2_final_results.png
-and report/figures/4_progression.png."""
+and report/figures/6_progression.png."""
 import sqlite3, sys
 from pathlib import Path
 import numpy as np, pandas as pd
@@ -62,7 +62,7 @@ for ax, (metric, title) in zip(axes, panels):
 fig.suptitle("The machine learning model at each stage, against ARIMA, ARMA and the simple average", fontsize=11)
 handles, labels = axes[0].get_legend_handles_labels()
 fig.legend(handles, labels, loc="outside lower center", ncols=3, frameon=False, fontsize=8.5)
-fig.savefig(OUT / "4_progression.png", bbox_inches="tight"); plt.close(fig)
+fig.savefig(OUT / "6_progression.png", bbox_inches="tight"); plt.close(fig)
 print("figures 2 and 3 written")
 
 # --- figures 4 and 5 with plain names -----------------------------------------
@@ -99,7 +99,7 @@ for key in ("xgboost", "xgboost_pooled", "xgboost_rel_pooled", "moving_average_2
     ax.plot(s_.index.to_timestamp(), s_.values, label=PLAIN[key], **st)
 ax.set_ylabel("units a day, average over ten stores"); ax.set_title("Monthly average of forecasts against sales for the slow mover", fontsize=10.5)
 plots.legend_below(ax, ncols=3)
-fig.savefig(OUT / "5_declining_item.png", bbox_inches="tight"); plt.close(fig)
+fig.savefig(OUT / "7_declining_item.png", bbox_inches="tight"); plt.close(fig)
 
 # figure 5: holiday weeks at the busiest store
 cfg = Config(item_ids=STUDY_ITEMS, fold_step=1, n_folds=358); df = load_panel(cfg, verbose=False)
@@ -110,5 +110,5 @@ fig, ax = plt.subplots(figsize=(11, 3.6))
 plots.plot_forecast_folds(p, df, top_id, origins=origins, window=("2015-11-09", "2016-01-03"),
                           methods=[PLAIN["xgboost_rel_pooled"], PLAIN["arima"], PLAIN["arma"], PLAIN["seasonal_naive"]], ax=ax)
 ax.set_title("Next-day forecasts against sales at the fast mover's busiest store, Thanksgiving to New Year", fontsize=10.5)
-fig.savefig(OUT / "6_holiday_weeks.png", bbox_inches="tight"); plt.close(fig)
+fig.savefig(OUT / "8_holiday_weeks.png", bbox_inches="tight"); plt.close(fig)
 print("figures 4 and 5 written")

@@ -9,7 +9,7 @@ from src.step2_data import load_panel
 from src.step3_explore import series_stats
 from src.step5_evaluate import run_walk_forward, score_folds
 
-OUT = Path("../demand-forecasting/report/figures/3_first_study_by_store.png")
+OUT = Path("../demand-forecasting/report/figures/5_first_study_by_store.png")
 PLAIN = {"xgboost": "XGBoost", "ets": "Exponential smoothing (ETS)", "arima": "ARIMA",
          "seasonal_naive": "This day last week", "moving_average_28": "28-day moving average",
          "seasonal_naive_364": "This day last year", "mean": "Long-run average",
