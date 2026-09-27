@@ -5,9 +5,8 @@ This module predates item 1. It is the calibrated-quantile code, and it is
 still the only order-quantity code in the repository. Item 1 compared it
 with an XGBoost trained on the quantile objective and found that the
 calibrated quantiles match the fitted ones within 0.002 relative pinball at
-a twenty-sixth of the fitting cost. The quantile work continues from here
-(PLAN.md, "the pooled, level-relative model's own residuals and calibrated
-quantiles").
+a twenty-sixth of the fitting cost. The quantile work continues from here,
+on the pooled, level-relative model's own residuals.
 
 What it does, and why:
 

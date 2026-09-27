@@ -6,7 +6,7 @@
 #
 # Like `01_explore`, this notebook is the procedure. It runs unchanged for
 # any item in `STUDY_ITEMS` and prints its findings. What those findings mean
-# for a particular product goes in a dated write-up under `findings/`.
+# for a particular product goes in a separate dated write-up.
 #
 # Two things to hold onto while reading:
 #
@@ -306,7 +306,7 @@ plots.show()
 # %% [markdown]
 # ## What this step should have established
 #
-# The answers go in a dated file under `findings/`, alongside step 3's:
+# The answers go in a dated write-up, alongside step 3's:
 #
 # 1. Which methods beat the benchmarks, and by how much. RMSSE means and
 #    medians, and whether the models are separable from each other.

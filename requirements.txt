@@ -1,5 +1,5 @@
 # Pinned to the versions this analysis was developed and verified against.
-# Python 3.14.3 on Windows.
+# Python 3.14.3 on Linux.
 pandas==3.0.5
 numpy==2.5.3
 scipy==1.18.1

@@ -7,8 +7,8 @@
 #
 # This notebook is the procedure. It runs unchanged for any item in
 # `STUDY_ITEMS`. What it finds for a particular item (the level shifts, the
-# SNAP lift, whether price is worth using) goes in a dated write-up under
-# `findings/`, so this file stays true whichever product it is pointed at.
+# SNAP lift, whether price is worth using) goes in a separate dated
+# write-up, so this file stays true whichever product it is pointed at.
 #
 # Each section answers one of the questions FPP §1.6 says to ask before
 # modelling, plus one measurement of our own. How sporadic and how
@@ -415,7 +415,7 @@ print(
 # ## What this step should have established
 #
 # Before moving to step 4, answer each of these for the item in hand. The
-# answers go in a dated file under `findings/`.
+# answers go in a dated write-up.
 #
 # 1. Is the working set clean? Longest zero run, pre-launch trim share,
 #    zero rate per store. Did the availability screen warn?

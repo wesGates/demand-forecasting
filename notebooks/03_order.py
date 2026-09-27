@@ -9,9 +9,9 @@
 # This is the ordering prototype from before item 1. Item 1 found that
 # calibrated error quantiles match an XGBoost trained on the quantile
 # objective, at a twenty-sixth of the cost, so this calibrated route is the
-# one the quantile work continues from (PLAN.md). Like the other notebooks it
+# one the quantile work continues from. Like the other notebooks it
 # is the procedure. It runs unchanged for any item in `STUDY_ITEMS` and
-# prints its findings, which go in a dated write-up under `findings/`.
+# prints its findings, which go in a dated write-up.
 #
 # It needs a two-year walk-forward. The first year calibrates each method's
 # error quantiles and the second is judged. The run is cached, so after the
@@ -205,7 +205,7 @@ plots.show()
 # %% [markdown]
 # ## What this step should have established
 #
-# The answers go in a dated file under `findings/`, alongside the others:
+# The answers go in a dated write-up, alongside the others:
 #
 # 1. How often ordering the mean would have run out. The share of weeks
 #    under-forecast, per method.

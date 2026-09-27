@@ -4,6 +4,7 @@ cache/
 
 # --- environment ---
 .venv/
+.vscode/
 __pycache__/
 *.pyc
 .ipynb_checkpoints/
@@ -28,4 +29,3 @@ information/
 # --- report: only the PDFs are tracked; the markdown sources and figures stay local ---
 report/*
 !report/*.pdf
-!report/*.odt

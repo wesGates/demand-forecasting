@@ -77,8 +77,7 @@ matter, SNAP benefit days, and, in the pooled model, the store.
 The first study, tag `first-study`, compared XGBoost, ETS and seasonal
 ARIMA against six benchmarks on one fast mover, on 52 weekly folds.
 Everything after it took the same pipeline further one numbered item at a
-time, each on its own branch with a dated findings file in
-[`findings/`](findings/).
+time.
 
 | item | question | answer |
 |---|---|---|
@@ -92,9 +91,6 @@ time, each on its own branch with a dated findings file in
 | 8 | A code review | One leak fixed (the closure imputation looked forward), fallbacks and unscored folds counted, the cache checked against the data. |
 | 9 | Both items in one pool? | Ties on the fast mover, loses on the slow one in holiday weeks. A shared pool needs the target on a common scale. |
 | 10 | The registry in SQL Server | Both tables loaded into SQL Server 2022 in under three minutes. The report's numbers come back by query. |
-
-[`PLAN.md`](PLAN.md) has the status, what comes next and the rules.
-[`GLOSSARY.md`](GLOSSARY.md) defines the terms.
 
 ## Running it
 
@@ -168,7 +164,6 @@ src/
 tools/                refit, gate, comparison, figure and report scripts
 tests/                pytest suite
 notebooks/            01_explore, 02_evaluate, 03_order (percent-format scripts)
-findings/             one dated file per item, with provenance
 report/               the report and the brief (PDF); sources and figures are local
 ```
 
@@ -177,4 +172,4 @@ report/               the report and the brief (PDF); sources and figures are lo
 Public data only. M5 has no inventory, deliveries or stockouts, so an
 order can only be simulated and a zero on the shelf cannot be told from a
 zero in demand. Two items at ten stores is a small study. New items with
-no history are not addressed. The plan lists what comes next.
+no history are not addressed.
