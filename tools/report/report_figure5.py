@@ -16,14 +16,16 @@ plots.use_style(); plt.rcParams["savefig.dpi"] = 300
 fig, ax = plt.subplots(figsize=(10, 4.0))
 x = range(len(t))
 for key, name in BENCH.items():  # benchmarks: grey markers, joined by one faint grey so each can be followed across stores
-    ax.plot(x, t[key], color="#b3b3b3", lw=0.9, zorder=1)
+    ax.plot(x, t[key], color="#c4c4c4", lw=0.9, zorder=1)
     ax.scatter(x, t[key], marker=plots.BENCH_MARKERS[key], color=plots.INK_SOFT, s=26, zorder=2, label=name)
 for key, name in MODELS.items():
     ax.plot(x, t[key], color=plots.MODEL_COLOURS[key], lw=2.2, marker="o", ms=5.5, zorder=3, label=name)
-ax.axhline(1.0, color=plots.AXIS, lw=1, zorder=0)
+ax.axhline(1.0, color=plots.INK_SOFT, lw=1, zorder=1.5)  # 1.0 = last week's number on the training history
 ax.set_xticks(list(x), t.index); ax.set_ylabel("scaled error (RMSSE)")
 ax.set_title("The first study: scaled error by store, busiest store on the left (lower is better)", fontsize=10.5)
 handles, labels = ax.get_legend_handles_labels()
-order = list(range(len(BENCH), len(labels))) + list(range(len(BENCH)))  # models first in the legend
+# Two rows of four, filled column by column: the three models and "this day last week" on the top row.
+top = list(range(len(BENCH), len(labels))) + [0]; bottom = list(range(1, len(BENCH)))
+order = [i for pair in zip(top, bottom) for i in pair]
 plots.legend_below(ax, ncols=4, handles=[handles[i] for i in order], labels=[labels[i] for i in order])
 fig.savefig(sys.argv[1], bbox_inches="tight"); plt.close(fig); print("wrote", sys.argv[1])
