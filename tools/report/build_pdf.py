@@ -130,9 +130,9 @@ for line in SRC.read_text().splitlines():
     elif line.startswith("!["):
         flush_para(); flush_bullets()
         path = SRC.parent / re.search(r"\((.+?)\)", line).group(1)
-        # The final-results figure has the smallest text so it stays full width; the others read fine narrower.
-        width = FRAME * (1.0 if "final_results" in path.name else 0.91 if "progression" in path.name else 0.85 if "weekly_error" in path.name else 0.6 if "classification" in path.name else 0.94)
-        flow.append(Spacer(1, 4)); flow.append(image(path, width=width * (0.75 if COMPACT else 1)))
+        # Figures are drawn about as wide as the page, so full width prints their text near its real size.
+        width = FRAME * (0.85 if "classification" in path.name else 1.0)
+        flow.append(Spacer(1, 4)); flow.append(image(path, width=width))
     elif line.startswith("|"):
         flush_para(); flush_bullets()
         cells = [c.strip() for c in line.strip().strip("|").split("|")]

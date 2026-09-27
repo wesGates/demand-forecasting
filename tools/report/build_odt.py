@@ -118,7 +118,7 @@ def add_table(rows):
     doc.text.addElement(t)
 
 def add_image(path):
-    im = PILImage.open(path); w_cm = TEXT_WIDTH_CM * (1.0 if "final_results" in path.name else 0.91 if "progression" in path.name else 0.85 if "weekly_error" in path.name else 0.6 if "classification" in path.name else 0.94)
+    im = PILImage.open(path); w_cm = TEXT_WIDTH_CM * (0.85 if "classification" in path.name else 1.0)
     h_cm = w_cm * im.height / im.width
     href = doc.addPicture(str(path))
     p = P(stylename=figp)

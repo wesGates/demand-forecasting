@@ -23,7 +23,7 @@ stats = series_stats(df, cfg)
 print(stats[["item_id", "store_id", "adi", "cv2", "demand_class"]].to_string(index=False))
 
 # --- figure 3: the demand classification, one point per store and item ---
-fig, ax = plt.subplots(figsize=(7.2, 4.6))
+fig, ax = plt.subplots(figsize=(6.4, 4.2))
 for item in ITEMS:
     g = stats[stats["item_id"] == item]
     ax.scatter(g["adi"], g["cv2"], s=48, **STYLE[item], label=f"{NAME[item]}, one point per store", zorder=3)
@@ -43,7 +43,7 @@ d = df[df["item_id"] == item].copy()
 d["weekday"] = d["date"].dt.dayofweek
 prof = d.groupby(["store_id", "weekday"])["sales"].mean().unstack("weekday")
 prof = prof.div(prof.mean(axis=1), axis=0)
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12.5, 4.6), gridspec_kw=dict(width_ratios=[1, 1.35]))
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(7.4, 7.8), gridspec_kw=dict(height_ratios=[1, 1.45]))
 for store, row in prof.iterrows():
     ax1.plot(range(7), row.values, color=plots.INK_MUTED, lw=1, alpha=0.6)
 ax1.plot(range(7), prof.mean().values, color=plots.INK, lw=2.4, label="average of the ten stores")

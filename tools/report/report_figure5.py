@@ -13,7 +13,7 @@ BENCH = {"seasonal_naive": "This day last week", "moving_average_28": "28-day mo
          "seasonal_naive_364": "This day last year", "mean": "Long-run average", "naive": "Yesterday's sales"}
 # "Yesterday plus trend" is left out. It sits on top of "yesterday's sales" at every store and is not in Table 5.
 plots.use_style(); plt.rcParams["savefig.dpi"] = 300
-fig, ax = plt.subplots(figsize=(10, 4.0))
+fig, ax = plt.subplots(figsize=(7.4, 4.4))
 x = range(len(t))
 for key, name in BENCH.items():  # benchmarks: grey markers, joined by one faint grey so each can be followed across stores
     ax.plot(x, t[key], color="#c4c4c4", lw=0.9, zorder=1)

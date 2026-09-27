@@ -21,7 +21,7 @@ df = load_panel(per, verbose=False); stats = series_stats(df, per)
 order = stats.sort_values("mean_sales", ascending=False)["store_id"].tolist()
 tab = tab.reindex(order); print(tab.round(1).to_string()); print("all stores:", tab.mean().round(1).to_dict())
 plots.use_style(); plt.rcParams["savefig.dpi"] = 300  # crisp in the PDF
-fig, ax = plt.subplots(figsize=(10, 2.9))
+fig, ax = plt.subplots(figsize=(7.4, 3.2))
 x = np.arange(len(order)); w = 0.2
 for i, (name, col) in enumerate(zip(tab.columns, (plots.INK_MUTED, plots.MODEL_COLOURS["arma"], plots.MODEL_COLOURS["arima"], plots.MODEL_COLOURS["xgboost_rel@pooled"]))):
     ax.bar(x + (i - 1.5) * w, tab[name], width=w, color=col, label=name)

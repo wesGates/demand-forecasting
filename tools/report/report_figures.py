@@ -28,17 +28,19 @@ runs = runs.sort_values("recorded_at").drop_duplicates(["item_ids", "label"], ke
 ITEM = {"FOODS_3_586": "Fast mover (14–103 units a day)", "FOODS_1_021": "Slow mover in decline (0.6–7 units a day)"}
 
 # --- figure 2: every method on both items ------------------------------------
-fig, axes = plt.subplots(1, 2, figsize=(12.5, 4.8))
-for ax, item in zip(axes, ("FOODS_3_586", "FOODS_1_021")):
+fig, axes = plt.subplots(2, 1, figsize=(7.4, 6.6), sharex=True)
+for ax, item in zip(axes, ("FOODS_3_586", "FOODS_1_021"), strict=True):
     g = runs[runs["item_ids"] == item].sort_values("rmsse_mean", ascending=False)
     y = np.arange(len(g))
-    col = [plots.MODEL_COLOURS.get(k, plots.INK_MUTED) for k in g["key"]]
+    # Benchmarks are grey. Any other method must have an entry in plots.MODEL_COLOURS, so a new model fails here, not silently grey.
+    col = [plots.INK_MUTED if m in plots.BENCH_MARKERS else plots.MODEL_COLOURS[k] for m, k in zip(g["method"], g["key"], strict=True)]
     ax.hlines(y, 0, g["rmsse_mean"], color=col, lw=1.2, alpha=0.6); ax.scatter(g["rmsse_mean"], y, color=col, s=44, zorder=3)
-    for yi, (_, r) in zip(y, g.iterrows()):
+    for yi, (_, r) in zip(y, g.iterrows(), strict=True):
         ax.text(r["rmsse_mean"] + 0.012, yi, f"{r['rmsse_mean']:.2f}", va="center", fontsize=8.5, color=plots.INK_SOFT)
     ax.set_yticks(y, g["label"], fontsize=8.5); ax.axvline(1.0, color=plots.INK_MUTED, lw=1)
-    ax.set_xlim(0.3, 1.2); ax.set_xlabel("scaled error (RMSSE; 1.0 = 'this day last week' on the training history)", fontsize=9)
+    ax.set_xlim(0.3, 1.2)
     ax.set_title(ITEM[item], fontsize=10); ax.grid(axis="y", visible=False)
+axes[-1].set_xlabel("scaled error (RMSSE; 1.0 = 'this day last week' on the training history)", fontsize=9)
 fig.suptitle("Every method on both items, ten stores, every day of one year as a starting point", fontsize=11)
 fig.savefig(OUT / "2_final_results.png", bbox_inches="tight"); plt.close(fig)
 
@@ -47,11 +49,11 @@ stages = [("per store", ("xgboost", None)), ("pooled", ("xgboost", "item_id")), 
 def pick(item, method, pool, col):
     g = runs[(runs["item_ids"] == item) & (runs["method"] == method) & (runs["pool_by"].isna() if pool is None else runs["pool_by"] == pool)]
     return float(g.iloc[0][col])
-fig, axes = plt.subplots(2, 3, figsize=(12.5, 6.6), sharex=True)
+fig, axes = plt.subplots(2, 3, figsize=(7.4, 6.0), sharex=True)
 panels = (("rmsse_mean", "scaled error\n(lower is better)"), ("win_vs_ref", "share of weeks beating\n'this day last week'"), ("bias_mean", "bias, units a day\n(0 = unbiased)"))
 refs = (("arima", "ARIMA", "-"), ("arma", "ARMA", "--"), ("moving_average_28", "28-day average", ":"))
-for i, (row, (item, short)) in enumerate(zip(axes, (("FOODS_3_586", "Fast mover"), ("FOODS_1_021", "Slow mover")))):
-    for ax, (metric, title) in zip(row, panels):
+for i, (row, (item, short)) in enumerate(zip(axes, (("FOODS_3_586", "Fast mover"), ("FOODS_1_021", "Slow mover")), strict=True)):
+    for ax, (metric, title) in zip(row, panels, strict=True):
         ys = [pick(item, m, p, metric) for _, (m, p) in stages]
         ax.plot(range(3), ys, marker="o", color=plots.MODEL_COLOURS["xgboost_rel@pooled"], lw=2.2, zorder=3, label="XGBoost at each stage")
         for ref, name, ls in refs:
@@ -95,7 +97,7 @@ p = frames_for(("FOODS_1_021",))
 p = p[~p["closure"].astype(bool)]
 p["month"] = pd.to_datetime(p["target_date"]).dt.to_period("M")
 actual = p[p["method"] == PLAIN["xgboost"]].groupby("month")["actual"].mean()
-fig, ax = plt.subplots(figsize=(9.5, 3.4))
+fig, ax = plt.subplots(figsize=(7.4, 3.4))
 ax.plot(actual.index.to_timestamp(), actual.values, color=plots.INK, lw=2.2, label="what actually sold")
 for key in ("xgboost", "xgboost_pooled", "xgboost_rel_pooled", "moving_average_28"):
     s_ = p[p["method"] == PLAIN[key]].groupby("month")["forecast"].mean()
@@ -110,7 +112,7 @@ cfg = Config(item_ids=STUDY_ITEMS, fold_step=1, n_folds=358); df = load_panel(cf
 stats = series_stats(df, cfg); cutoff = classification_cutoff(df, cfg); origins = cfg.fold_origins(df["date"].max())
 top_id, top_store = stats.iloc[0]["id"], stats.iloc[0]["store_id"]
 p = frames_for(STUDY_ITEMS)
-fig, ax = plt.subplots(figsize=(11, 3.6))
+fig, ax = plt.subplots(figsize=(7.4, 3.8))
 plots.plot_forecast_folds(p, df, top_id, origins=origins, window=("2015-11-09", "2016-01-03"),
                           methods=[PLAIN["xgboost_rel_pooled"], PLAIN["arima"], PLAIN["arma"], PLAIN["seasonal_naive"]], ax=ax)
 ax.set_title("Next-day forecasts against sales at the fast mover's busiest store, Thanksgiving to New Year", fontsize=10.5)

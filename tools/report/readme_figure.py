@@ -26,7 +26,7 @@ for (name, _, _), e in zip(runs, err):
     print(f"{name:20s} {e:.1f}  final lower by {1 - final / e:.1%}")
 
 plots.use_style(); plt.rcParams["savefig.dpi"] = 300
-fig, ax = plt.subplots(figsize=(8, 2.6))
+fig, ax = plt.subplots(figsize=(7.4, 2.7))
 y = range(len(runs))[::-1]  # final model at the bottom
 for yi, (name, _, col), e in zip(y, runs, err):
     ax.barh(yi, e, color=col, height=0.6)
