@@ -15,7 +15,8 @@ OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("report/figures"); OUT.mk
 plots.use_style(); plt.rcParams["savefig.dpi"] = 300
 ITEMS = ("FOODS_3_586", "FOODS_1_021")
 NAME = {"FOODS_3_586": "fast mover", "FOODS_1_021": "slow mover"}
-COLOUR = {"FOODS_3_586": plots.SERIES_1, "FOODS_1_021": plots.SERIES_5}
+# Items get black and grey, since the hues are kept for models.
+STYLE = {"FOODS_3_586": dict(color=plots.INK, marker="o"), "FOODS_1_021": dict(color=plots.INK_MUTED, marker="s")}
 cfg = Config(item_ids=ITEMS)
 df = load_panel(cfg, verbose=False)
 stats = series_stats(df, cfg)
@@ -25,7 +26,7 @@ print(stats[["item_id", "store_id", "adi", "cv2", "demand_class"]].to_string(ind
 fig, ax = plt.subplots(figsize=(7.2, 4.6))
 for item in ITEMS:
     g = stats[stats["item_id"] == item]
-    ax.scatter(g["adi"], g["cv2"], s=48, color=COLOUR[item], label=f"{NAME[item]}, one point per store", zorder=3)
+    ax.scatter(g["adi"], g["cv2"], s=48, **STYLE[item], label=f"{NAME[item]}, one point per store", zorder=3)
 ax.axvline(1.32, color=plots.INK_MUTED, lw=1); ax.axhline(0.49, color=plots.INK_MUTED, lw=1)
 ax.set_xlim(0.95, 3.0); ax.set_ylim(0, 1.0)
 ax.text(0.97, 0.45, "smooth", va="top", fontsize=9, color=plots.INK_SOFT); ax.text(1.35, 0.45, "intermittent", va="top", fontsize=9, color=plots.INK_SOFT)
@@ -45,7 +46,7 @@ prof = prof.div(prof.mean(axis=1), axis=0)
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12.5, 4.6), gridspec_kw=dict(width_ratios=[1, 1.35]))
 for store, row in prof.iterrows():
     ax1.plot(range(7), row.values, color=plots.INK_MUTED, lw=1, alpha=0.6)
-ax1.plot(range(7), prof.mean().values, color=plots.SERIES_1, lw=2.4, label="average of the ten stores")
+ax1.plot(range(7), prof.mean().values, color=plots.INK, lw=2.4, label="average of the ten stores")
 ax1.axhline(1.0, color=plots.AXIS, lw=1)
 ax1.set_xticks(range(7), ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]); ax1.set_ylabel("sales relative to the store's own average")
 ax1.set_title("The weekly pattern, each store as a grey line", fontsize=10); ax1.legend(loc="upper left", frameon=False, fontsize=9)

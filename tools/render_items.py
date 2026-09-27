@@ -14,8 +14,8 @@ from src.scoring import score_folds
 
 OUT = Path("figures/items345"); OUT.mkdir(parents=True, exist_ok=True)
 plots.use_style()
-plots.MODEL_COLOURS.update({"xgboost_pooled": plots.SERIES_4, "xgboost_rel_pooled": plots.SERIES_5,
-                            "xgboost_rel": plots.SERIES_4})
+plots.MODEL_COLOURS.update({"xgboost_pooled": plots.MODEL_COLOURS["xgboost@pooled"],
+                            "xgboost_rel_pooled": plots.MODEL_COLOURS["xgboost_rel@pooled"]})
 LAYOUT = dict(fold_step=1, n_folds=358)
 FIVE = ["xgboost", "xgboost_pooled", "xgboost_rel_pooled", "arima", "ets"]
 written = []

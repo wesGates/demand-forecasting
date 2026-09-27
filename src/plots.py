@@ -894,11 +894,16 @@ def plot_zero_rate(
 # Step 5: evaluating the forecasts (FPP §5.4, §5.8, §5.10)
 # --------------------------------------------------------------------------- #
 
-# Models carry a hue and benchmarks go grey. Nine methods is past the hues a
-# chart can carry, and the story is the models against the pack, so that is
-# what the colour says. Benchmarks are told apart by line style and marker
-# instead, so the legend still identifies each one.
-MODEL_COLOURS = {"xgboost": SERIES_1, "ets": SERIES_2, "arima": SERIES_3}
+# Models carry a hue and benchmarks go grey. Cool colours are the statistical
+# models, warm colours the machine learning ones, and gold is always the final
+# model. Benchmarks are told apart by line style and marker instead, so the
+# legend still identifies each one. Keys are method names, "@pooled" for a
+# pooled run.
+NAVY = "#1F3864"
+MODEL_COLOURS = {
+    "arima": NAVY, "ets": SERIES_3, "arma": "#7B52AB", "arima_plain": "#56B4E9",
+    "xgboost_rel@pooled": SERIES_5, "xgboost": SERIES_2, "xgboost@pooled": "#8C2D04", "xgboost_rel": "#E8836B",
+}
 BENCH_LINES = {
     "seasonal_naive": "--",
     "moving_average_28": ":",
