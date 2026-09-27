@@ -1,6 +1,7 @@
 """README and report figure 1: average weekly error per store for last week's number, ARMA,
 ARIMA and the final model. Fast mover, every-day layout, from the cache.
-Run from the repo root with PYTHONPATH=. ; argv[1] is the output png."""
+Run from the repo root with PYTHONPATH=. ; argv[1] is the output png,
+report/figures/1_final_vs_baselines.png."""
 import sys
 import matplotlib.pyplot as plt
 from src import plots

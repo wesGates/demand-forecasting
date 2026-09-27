@@ -14,7 +14,7 @@ On a fast, regular mover (14 to 103 units a day depending on the store),
 XGBoost has the lowest error of the ten methods tested. It beats ARMA and
 ARIMA at all ten stores.
 
-![XGBoost against last week's number, ARMA and ARIMA](report/final_vs_baselines.png)
+![XGBoost against last week's number, ARMA and ARIMA](report/figures/1_final_vs_baselines.png)
 
 | XGBoost (final) against | weekly error, units | RMSSE | weeks XGBoost won | stores XGBoost won |
 |---|---|---|---|---|

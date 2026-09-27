@@ -26,7 +26,10 @@ information/
 # --- LibreOffice lock files ---
 .~lock*
 
-# --- report: only the PDFs are tracked; the markdown sources and figures stay local ---
+# --- report: tracked are the two PDFs and the headline figure (the README shows it).
+#     The .md sources, the .odt copies and the other figures stay local. ---
 report/*
 !report/*.pdf
-!report/final_vs_baselines.png
+!report/figures/
+report/figures/*
+!report/figures/1_final_vs_baselines.png
