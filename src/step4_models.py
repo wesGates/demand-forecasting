@@ -20,6 +20,8 @@ Models under test:
   ets           Holt-Winters exponential smoothing (FPP ch. 8)
   arima         seasonal ARIMA with holiday and SNAP regressors (FPP ch. 9-10)
   xgboost_q*    quantile-objective trees, kept as item 1's comparator
+  xgboost_tweedie  the trees under a Tweedie loss, for items with many zero days
+  croston, sba, tsb  the intermittent-demand benchmarks (FPP §13.2)
 
 ETS and ARIMA are the two classical families FPP puts forward. the ETS
 implementation takes no regressors, so it cannot be told a holiday is
@@ -41,11 +43,13 @@ from src.models import (
     arma_model,
     benchmarks,
     ets_model,
+    intermittent,
     xgboost_model,
-    xgboost_quantile,
     xgboost_poisson,
+    xgboost_quantile,
     xgboost_rel_recent,
     xgboost_relative,
+    xgboost_tweedie,
 )
 from src.models.arima_model import (
     _arima_exog,
@@ -67,6 +71,8 @@ MODELS: dict[str, Forecaster] = {
     "xgboost_rel_recent": xgboost_rel_recent.fit_predict_xgboost_rel_recent,
     "arima_plain": arma_model.fit_predict_arima_plain,
     "arma": arma_model.fit_predict_arma,
+    "xgboost_tweedie": xgboost_tweedie.fit_predict_xgboost_tweedie,
+    **intermittent.INTERMITTENT,
     **xgboost_quantile.QUANTILE_MODELS,
 }
 
@@ -86,6 +92,8 @@ MODULE_OF = {
     "xgboost_rel_recent": xgboost_rel_recent,
     "arima_plain": arma_model,
     "arma": arma_model,
+    "xgboost_tweedie": xgboost_tweedie,
+    **{name: intermittent for name in intermittent.INTERMITTENT},
     **{name: xgboost_quantile for name in xgboost_quantile.QUANTILE_MODELS},
 }
 

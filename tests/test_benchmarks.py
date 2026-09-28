@@ -46,6 +46,7 @@ def test_registry_has_six_benchmarks_and_the_expected_models():
         "xgboost", "ets", "arima", "xgboost_rel",
         "arima_plain", "arma",  # the two weaker ARIMA relatives, baselines
         "xgboost_poisson", "xgboost_rel_recent",  # dev-suite experiments
+        "xgboost_tweedie", "croston", "sba", "tsb",  # item 11, the intermittent set
     } | quantile_names
     assert set(ALL_FORECASTERS) == set(BENCHMARKS) | set(MODELS)
     assert not set(BENCHMARKS) & set(MODELS)
