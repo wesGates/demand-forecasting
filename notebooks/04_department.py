@@ -54,8 +54,12 @@ DEPT = "FOODS_3"
 STORES = ("CA_1", "CA_2", "CA_3", "CA_4", "TX_1", "TX_2", "TX_3", "WI_1", "WI_2", "WI_3")
 
 # The screen. A series is only worth forecasting if it was on the shelf.
-# Edit these two and rerun from the screen cell down.
-MIN_HISTORY_DAYS = 365  # every store needs this much history before the test year
+# The history floor is the harness's own minimum training window, so it is
+# read from Config rather than chosen here. The zero-run cap is a judgment:
+# there is no published cut-off, and a chance-based rule flags nearly every
+# series in M5, since stock-out gaps are everywhere in it. 90 days keeps a
+# usable sample; the findings rerun the key comparisons at 60 days as a check.
+MIN_HISTORY_DAYS = Config().min_train_days
 MAX_ZERO_RUN = 90  # longest run of zero-sales days allowed at any store
 
 # %% [markdown]
@@ -98,7 +102,9 @@ print(stats["demand_class"].value_counts().to_string())
 # an item that was not on the shelf. The two-item study checked this by
 # hand. Here the numbers do it: per item, the shortest history at any store
 # and the longest zero run at any store. The table shows how many items pass
-# as the two limits move, so the choice is visible.
+# as the two limits move. The count rises steadily with the cap, with no
+# natural break, which is why the cap is stated as a choice and checked
+# rather than derived.
 
 # %%
 item = stats.groupby("item_id").agg(
