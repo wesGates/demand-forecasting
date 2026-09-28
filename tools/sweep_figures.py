@@ -13,10 +13,10 @@ OUT = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("figures/item11"); OUT.mk
 plots.use_style(); plt.rcParams["savefig.dpi"] = 300
 NAME = {"seasonal_naive": "This day last week", "moving_average_28": "28-day average", "ets": "ETS", "croston": "Croston",
         "sba": "SBA", "tsb": "TSB", "xgboost_rel@item_id": "XGBoost, pooled per item, level-relative",
-        "xgboost_tweedie@store_id": "XGBoost, pooled per store, Tweedie"}
+        "xgboost_tweedie@store_id": "XGBoost, pooled per store, Tweedie", "xgboost_tweedie@item_id": "XGBoost, pooled per item, Tweedie"}
 COLOUR = {"seasonal_naive": plots.INK_MUTED, "moving_average_28": plots.INK_MUTED, "ets": plots.MODEL_COLOURS["ets"],
           "croston": plots.NAVY, "sba": "#3F6BB5", "tsb": "#7B52AB",
-          "xgboost_rel@item_id": plots.MODEL_COLOURS["xgboost_rel@pooled"], "xgboost_tweedie@store_id": plots.MODEL_COLOURS["xgboost@pooled"]}
+          "xgboost_rel@item_id": plots.MODEL_COLOURS["xgboost_rel@pooled"], "xgboost_tweedie@store_id": plots.MODEL_COLOURS["xgboost@pooled"], "xgboost_tweedie@item_id": plots.MODEL_COLOURS["xgboost@pooled"]}
 CLASSES = ["smooth", "erratic", "intermittent", "lumpy"]
 
 # --- figure 1: RMSSE by class, one dot per method -----------------------------
