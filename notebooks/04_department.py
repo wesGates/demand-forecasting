@@ -53,13 +53,20 @@ plots.use_style()
 DEPT = "FOODS_3"
 STORES = ("CA_1", "CA_2", "CA_3", "CA_4", "TX_1", "TX_2", "TX_3", "WI_1", "WI_2", "WI_3")
 
-# The screen. A series is only worth forecasting if it was on the shelf.
-# The history floor is the harness's own minimum training window, so it is
-# read from Config rather than chosen here. The zero-run cap is a judgment:
-# there is no published cut-off, and a chance-based rule flags nearly every
-# series in M5, since stock-out gaps are everywhere in it. 90 days keeps a
-# usable sample; the findings rerun the key comparisons at 60 days as a check.
-MIN_HISTORY_DAYS = Config().min_train_days
+# The screen. A series is only worth forecasting if it was on the shelf and
+# has been seen through enough of the year.
+# Two years of history: the holiday and SNAP effects are once-a-year dummies,
+# and Hyndman & Kostenko (2007, Foresight 6) give m + 2 observations as the
+# point where a seasonal dummy's prediction interval becomes finite. With one
+# year each holiday is a single observation; with two it has been seen twice.
+# They also say such minima "are not necessarily adequate to deal with
+# randomness", so two years is the floor, not a comfortable amount. The
+# harness's own minimum (Config.min_train_days, 365) is about fitting at all.
+# The zero-run cap is a judgment: there is no published cut-off, and a
+# chance-based rule flags nearly every series in M5, since stock-out gaps are
+# everywhere in it. 90 days keeps a usable sample; the findings rerun the key
+# comparisons at 60 days as a check.
+MIN_HISTORY_DAYS = 730
 MAX_ZERO_RUN = 90  # longest run of zero-sales days allowed at any store
 
 # %% [markdown]
