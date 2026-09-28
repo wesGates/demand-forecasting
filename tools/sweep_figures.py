@@ -34,7 +34,7 @@ for ax, cls in zip(axes, CLASSES, strict=True):
     ax.scatter(g["rmsse"], y, color=[COLOUR[m] for m in g["method"]], s=36, zorder=3)
     for yi, (_, r) in zip(y, g.iterrows(), strict=True):
         ax.text(r["rmsse"] + 0.01, yi, f"{r['rmsse']:.2f}", va="center", fontsize=7.5, color=plots.INK_SOFT)
-    ax.set_title(f"{cls}, {int(g['items'].max())} items", fontsize=9); ax.grid(axis="y", visible=False)
+    ax.set_title(f"{cls}\n{int(g['items'].max())} items", fontsize=9); ax.grid(axis="y", visible=False)
     ax.axvline(1.0, color=plots.INK_MUTED, lw=1)
 axes[0].set_xlim(0.3, 1.15)
 fig.supxlabel("scaled error (RMSSE; 1.0 = 'this day last week' on the training history)", fontsize=9)
@@ -56,7 +56,7 @@ for ax, cls in zip(axes, CLASSES, strict=True):
     ax.barh(y, rel, color=[COLOUR[m] for m in g["method"]], height=0.6)
     for yi, (v, s) in zip(y, zip(rel, g["short_weeks"], strict=True), strict=True):
         ax.text(v + 0.01, yi, f"{v:.2f}  ({s:.0%} short)", va="center", fontsize=7, color=plots.INK_SOFT)
-    ax.set_title(f"{cls}, {g['weekly_sales'].iloc[0]:.0f} units/wk", fontsize=9); ax.grid(axis="y", visible=False)
+    ax.set_title(f"{cls}\n{g['weekly_sales'].iloc[0]:.0f} units a week", fontsize=9); ax.grid(axis="y", visible=False)
     ax.set_xlim(0, max(1.0, float(rel.max()) * 1.6))
 fig.supxlabel("units left over per week at 95% service, as a share of the store's weekly sales", fontsize=9)
 fig.suptitle("What each method's order costs in surplus for the same service level", fontsize=10.5)
