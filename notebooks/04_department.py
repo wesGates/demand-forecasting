@@ -55,10 +55,11 @@ STORES = ("CA_1", "CA_2", "CA_3", "CA_4", "TX_1", "TX_2", "TX_3", "WI_1", "WI_2"
 
 # The screen. A series is only worth forecasting if it was on the shelf and
 # has been seen through enough of the year.
-# Two years of history: the holiday and SNAP effects are once-a-year dummies,
-# and Hyndman & Kostenko (2007, Foresight 6) give m + 2 observations as the
-# point where a seasonal dummy's prediction interval becomes finite. With one
-# year each holiday is a single observation; with two it has been seen twice.
+# Two years of history: the calendar-event effects are once-a-year dummies
+# (SNAP is not; it comes round ten days a month), and Hyndman & Kostenko
+# (2007, Foresight 6) give m + 2 observations as the point where a seasonal
+# dummy's prediction interval becomes finite. With one year each holiday is a
+# single observation; with two it has been seen twice.
 # They also say such minima "are not necessarily adequate to deal with
 # randomness", so two years is the floor, not a comfortable amount. The
 # harness's own minimum (Config.min_train_days, 365) is about fitting at all.
