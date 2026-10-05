@@ -14,25 +14,13 @@ import argparse, sqlite3
 from datetime import UTC, datetime
 from pathlib import Path
 import pandas as pd
+from src import tables
 from src.forecast import forecast_as_of
 from src.step2_data import load_panel
 from src.step5_evaluate import _method_code
 from src.suites import suite_config
 
-TABLE = """CREATE TABLE IF NOT EXISTS forecast (
-    as_of       TEXT NOT NULL,   -- the origin, the last day of sales the forecast saw
-    id          TEXT NOT NULL,
-    item_id     TEXT NOT NULL,
-    store_id    TEXT NOT NULL,
-    method      TEXT NOT NULL,   -- method name, '@pool_by' appended when pooled
-    horizon     INTEGER NOT NULL,
-    target_date TEXT NOT NULL,
-    forecast    REAL NOT NULL,
-    fallback    INTEGER NOT NULL,
-    code_digest TEXT NOT NULL,   -- the method's code at the time, as the cache keys it
-    made_at     TEXT NOT NULL,   -- ISO 8601, UTC
-    PRIMARY KEY (as_of, id, method, target_date)
-)"""
+TABLE = tables.ddl("forecast", "sqlite")  # the one definition, src/tables.py
 
 p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 p.add_argument("--as-of", required=True, help="the origin date, YYYY-MM-DD")
@@ -63,8 +51,8 @@ con = sqlite3.connect(a.db)
 con.execute(TABLE)
 before = con.execute("SELECT COUNT(*) FROM forecast").fetchone()[0]
 con.executemany(  # OR IGNORE: a rerun of the same date writes nothing
-    "INSERT OR IGNORE INTO forecast VALUES (?,?,?,?,?,?,?,?,?,?,?)",
-    out.itertuples(index=False, name=None),
+    f"INSERT OR IGNORE INTO forecast VALUES ({','.join('?' * len(tables.columns('forecast')))})",
+    out[tables.columns("forecast")].itertuples(index=False, name=None),
 )
 con.commit()
 after = con.execute("SELECT COUNT(*) FROM forecast").fetchone()[0]

@@ -1,6 +1,8 @@
 """
 Copy the daily job's forecast rows (cache/forecasts.sqlite) into SQL
-Server, the same way load_registry.py copies the registry. Rows already
+Server as host.forecast (the host-side tables sit in the `host` schema,
+beside the registry's dbo tables), the same way load_registry.py copies
+the registry. Rows already
 there are skipped, keyed on (as_of, id, method, target_date), so the copy
 can run after every daily job. Run from the repository root:
 
@@ -18,15 +20,13 @@ from pathlib import Path
 
 import pandas as pd
 
+from src import tables
+
 sys.path.insert(0, str(Path(__file__).parent))
 from load_registry import connect, create_database, load_table  # noqa: E402
 
 FORECASTS = Path("cache/forecasts.sqlite")
-COLUMNS = {
-    "as_of": "DATE", "id": "VARCHAR(40)", "item_id": "VARCHAR(20)", "store_id": "VARCHAR(8)",
-    "method": "VARCHAR(40)", "horizon": "INT", "target_date": "DATE", "forecast": "FLOAT",
-    "fallback": "BIT", "code_digest": "VARCHAR(64)", "made_at": "DATETIME2(0)",
-}
+COLUMNS = tables.types("forecast", "sqlserver")  # the one definition, src/tables.py
 
 
 def main() -> int:
@@ -40,14 +40,13 @@ def main() -> int:
     create_database(database)
     with connect(database) as con:
         cur = con.cursor()
-        cur.execute("IF OBJECT_ID('forecast') IS NULL CREATE TABLE forecast ("
-                    + ", ".join(f"[{c}] {t}" for c, t in COLUMNS.items())
-                    + ", PRIMARY KEY (as_of, id, method, target_date))")
-        cur.execute("SELECT as_of, id, method, target_date FROM forecast")
+        cur.execute("IF SCHEMA_ID('host') IS NULL EXEC('CREATE SCHEMA host')")
+        cur.execute("IF OBJECT_ID('host.forecast') IS NULL " + tables.ddl("forecast", "sqlserver", qualified="host.forecast"))
+        cur.execute("SELECT as_of, id, method, target_date FROM host.forecast")
         have = {tuple(map(str, r)) for r in cur.fetchall()}
         new = rows[[tuple(map(str, k)) not in have for k in rows[["as_of", "id", "method", "target_date"]].itertuples(index=False, name=None)]]
-        n = load_table(con, "forecast", new, COLUMNS) if len(new) else 0
-        print(f"{n} new forecast rows loaded into {database} ({len(rows) - n} already there)")
+        n = load_table(con, "host.forecast", new, COLUMNS) if len(new) else 0
+        print(f"{n} new forecast rows loaded into {database}.host.forecast ({len(rows) - n} already there)")
     return 0
 
 

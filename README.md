@@ -85,6 +85,8 @@ src/models/   one module per forecaster
 notebooks/    exploration, evaluation and ordering, as percent-format scripts
 tests/        pytest suite
 tools/        refit, comparison, figure, report and SQL Server scripts
+tools/ibmi/   the push of forecasts to DB2 on an IBM i host, and its DDL; the
+              host side is github.com/wesGates/forecast-host-ports
 report/       the report and the brief (PDF)
 ```
 
