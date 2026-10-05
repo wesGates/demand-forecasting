@@ -15,4 +15,7 @@ is a separate project: github.com/wesGates/forecast-host-ports.
 
 Needs IBM's "IBM i Access ODBC Driver" and `pyodbc`, and `IBMI_HOST`,
 `IBMI_USER`, `IBMI_LIBRARY` in the environment, with `IBMI_PASSWORD` set
-in the shell session only.
+in the shell session only, read from a private (`chmod 600`) file rather
+than typed or kept in `~/.bashrc`:
+
+    export IBMI_PASSWORD="$(cat ~/Documents/keys/.ibmi_password.txt)"

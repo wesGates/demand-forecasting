@@ -34,7 +34,8 @@ rows["fallback"] = rows["fallback"].astype(int)
 table = f"{env['IBMI_LIBRARY']}.FORECAST"
 con = pyodbc.connect(
     f"DRIVER={{IBM i Access ODBC Driver}};SYSTEM={env['IBMI_HOST']};UID={env['IBMI_USER']};"
-    f"PWD={env['IBMI_PASSWORD']};NAM=1",  # NAM=1: SQL naming, library.table
+    # NAM=1: SQL naming, library.table. ExtendedDynamic=0: no SQL package in QGPL, which PUB400 forbids.
+    f"PWD={env['IBMI_PASSWORD']};NAM=1;ExtendedDynamic=0",
     autocommit=False,
 )
 cur = con.cursor()

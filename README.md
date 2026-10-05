@@ -77,6 +77,64 @@ python -m src.run --suite dev --item fast --methods xgboost_rel --note "first ru
 
 The `dev` suite is three stores and eight weeks, under a minute.
 
+### The SQL Server and IBM i loaders
+
+Once per machine: IBM's ODBC driver (`ibm-iaccess`, from IBM's apt
+repository, and `unixodbc`), the SQL Server container from
+[`tools/sqlserver/docker-compose.yml`](tools/sqlserver/docker-compose.yml),
+and the host settings in `~/.bashrc`:
+
+```
+export IBMI_HOST=pub400.com
+export IBMI_USER=<IBM i user profile>
+export IBMI_LIBRARY=<library for the FORECAST table>
+```
+
+The two passwords live in private files (`chmod 600`), never in
+`~/.bashrc`, and are exported per terminal session. Every session, after a
+reboot or not, the shell function below readies the terminal: it exports
+both passwords, enters the project and its venv, starts the
+`forecasting-sqlserver` container if it is stopped and waits until SQL
+Server accepts connections. Put it in `~/.bashrc` and run `forecast-env`,
+then the loaders in `tools/sqlserver/` and `tools/ibmi/` from that
+terminal.
+
+```bash
+forecast-env() {
+    local keys=~/Documents/keys f
+    for f in .mssql_password.txt .ibmi_password.txt; do
+        [ -r "$keys/$f" ] || { echo "forecast-env: missing $keys/$f" >&2; return 1; }
+    done
+    export MSSQL_PASSWORD="$(cat "$keys/.mssql_password.txt")"
+    export IBMI_PASSWORD="$(cat "$keys/.ibmi_password.txt")"
+    cd ~/Documents/projects/demand-forecasting || return 1
+    source .venv/bin/activate
+
+    local docker=docker
+    docker info >/dev/null 2>&1 || docker="sudo docker"
+    if [ "$($docker inspect -f '{{.State.Running}}' forecasting-sqlserver 2>/dev/null)" != true ]; then
+        local since i ready=
+        since=$(date +%s)
+        $docker start forecasting-sqlserver >/dev/null || return 1
+        printf 'Starting SQL Server'
+        for i in $(seq 90); do
+            if $docker logs --since "$since" forecasting-sqlserver 2>&1 | grep -q 'ready for client connections'; then
+                ready=1
+                break
+            fi
+            printf '.'
+            sleep 1
+        done
+        [ -n "$ready" ] && echo ' ready.' || echo ' not ready after 90s; check: docker logs forecasting-sqlserver' >&2
+    fi
+    echo "Ready: $IBMI_USER@$IBMI_HOST library $IBMI_LIBRARY; SQL Server on localhost:1433; venv active."
+}
+```
+
+On PUB400 the ODBC connection needs `ExtendedDynamic=0`, which
+`tools/ibmi/load_forecasts.py` sets: by default the driver keeps an SQL
+package in `QGPL`, where PUB400 allows no objects.
+
 ## Layout
 
 ```
