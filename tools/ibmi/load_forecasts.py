@@ -35,19 +35,30 @@ table = f"{env['IBMI_LIBRARY']}.FORECAST"
 con = pyodbc.connect(
     f"DRIVER={{IBM i Access ODBC Driver}};SYSTEM={env['IBMI_HOST']};UID={env['IBMI_USER']};"
     # NAM=1: SQL naming, library.table. ExtendedDynamic=0: no SQL package in QGPL, which PUB400 forbids.
-    f"PWD={env['IBMI_PASSWORD']};NAM=1;ExtendedDynamic=0",
-    autocommit=False,
+    # CommitMode=0 and autocommit: no commitment control. A user library on PUB400 has no journal,
+    # and an insert under commitment control into an unjournaled table fails with SQL7008. The load is
+    # keyed and skips rows already there, so it needs no transaction.
+    f"PWD={env['IBMI_PASSWORD']};NAM=1;ExtendedDynamic=0;CommitMode=0",
+    autocommit=True,
 )
 cur = con.cursor()
-have = {(str(r[0]), r[1], r[2], str(r[3])) for r in cur.execute(f"SELECT as_of, id, method, target_date FROM {table}")}
-keep = [k not in have for k in zip(rows["as_of"].astype(str), rows["id"], rows["method"], rows["target_date"].astype(str), strict=True)]
-new = rows[keep]
-if len(new):
-    cur.fast_executemany = True
-    cur.executemany(
-        f"INSERT INTO {table} ({', '.join(cols)}) VALUES ({', '.join('?' * len(cols))})",
-        [tuple(r) for r in new[cols].itertuples(index=False, name=None)],
-    )
-con.commit()
+before = cur.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+# A blocked insert (many rows per execute) is fast but DB2 for i allows it only for INSERT ... VALUES,
+# so the rows go into a session temporary table in QTEMP first, and one set-based statement then
+# copies across the ones whose key is absent. The database decides what is new, and the count comes
+# from the table, not from what this script believed it sent.
+cols_sql = ", ".join(cols)
+cur.execute(f"DECLARE GLOBAL TEMPORARY TABLE SESSION.FORECAST_IN LIKE {table} WITH REPLACE")
+cur.fast_executemany = True
+params = [tuple(r) for r in rows[cols].itertuples(index=False, name=None)]
+BATCH = 10_000  # the driver's blocked insert takes at most 32,767 rows per execute (SQL0221)
+for start in range(0, len(params), BATCH):
+    cur.executemany(f"INSERT INTO SESSION.FORECAST_IN ({cols_sql}) VALUES ({', '.join('?' * len(cols))})", params[start : start + BATCH])
+match = " AND ".join(f"t.{k} = s.{k}" for k in tables.FORECAST_KEY)
+cur.execute(
+    f"INSERT INTO {table} ({cols_sql}) SELECT {cols_sql} FROM SESSION.FORECAST_IN s "
+    f"WHERE NOT EXISTS (SELECT 1 FROM {table} t WHERE {match})"
+)
+after = cur.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
 con.close()
-print(f"{len(new)} new forecast rows pushed to {table} on {env['IBMI_HOST']} ({len(rows) - len(new)} already there)")
+print(f"{after - before} new forecast rows pushed to {table} on {env['IBMI_HOST']} ({len(rows) - (after - before)} already there)")
